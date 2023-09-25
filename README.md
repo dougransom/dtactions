@@ -7,7 +7,7 @@ This document describes how to instlall dtactions for end users and for develope
 
 ## Status
 
-dtactions code has been updated from Python 2 to Python 3. It is experimental at this moment. (and for a long time). Some modules are used more frequently, as 'sendkeys.py'.
+dtactions code has been updated from Python 2 to Python 3. It is experimental at this moment (and will remain for quite a while probably). Some modules are used more frequently, especially `sendkeys.py`.
 
 You can `pip install dtactions` manually.
 

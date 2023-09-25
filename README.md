@@ -7,26 +7,13 @@ This document describes how to instlall dtactions for end users and for develope
 
 ## Status
 
-dtactions code has been updated from Python 2 to Python 3. It is experimental at this moment.
+dtactions code has been updated from Python 2 to Python 3. It is experimental at this moment. (and for a long time). Some modules are used more frequently, as 'sendkeys.py'.
 
-The packages are ccurrently published in the [Test Python Packaging Index](https://test.pypi.org/) rather than
-the [Python Packaging Index](https://pypi.org/). The pip commands are a bit more complicated for this.
+You can `pip install dtactions` manually.
 
 ## Instructions for End Users
 
-If you would like to install dtactions for use, but not as a developer, here are the instructions:
-
-Install Python and Natlink and the packages you would like to use (Dragonfly, Caster, Unimacro, Vocola) as described in the Natlink repository README.
-   
-
-1. Install dtactions
-   It will also pull any prequisites from the [Python Packaging Index](https://pypi.org/).
-
-   - `py -m pip install  dtactions`
-
-   This will install the packages in your Python site-packages area. It will also add the following commands, which should be
-   in your path now in your commmand prompt:
-
+Normally dtactions is installed via pip when you install the package (Dragonfly, Caster, Unimacro, Vocola) that uses dtactions. At the moment, mainly Vocola and Unimacro use dtactions.
 
 ## Instructions for Developers
 

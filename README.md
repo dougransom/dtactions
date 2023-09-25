@@ -3,7 +3,7 @@
 dtactions is an OpenSource extension module for the speech recognition program Dragon.
 It is meant to perform actions that are common to other packages like Dragonfly, Unimacro and Vocola.
 
-This document describes how to instlall dtactions for end users and for developers.
+This document describes how to install dtactions for end users and for developers.
 
 ## Status
 

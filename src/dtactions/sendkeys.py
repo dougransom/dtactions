@@ -41,8 +41,8 @@ Tested at bottom of this file interactively...
     natlink.execScript(f'SendSystemKeys("{keys}")')
     
     
-    
 if __name__ == "__main__":
+    pass
     # sendkeys("{a 3}") #aaa
     # sendkeys("x y z ")
     # sendkeys("test, test, met komma.{home}")

@@ -44,6 +44,7 @@ Helper class and functions
 ==========================
 
 '''
+#pylint:disable=C0209, R0903, W0104, W0603, R0912, R1702, C0415
 
 import array
 import ctypes
@@ -56,7 +57,7 @@ import re
 ## python 3 only:
 from urllib.parse import unquote
 
-import pywintypes
+# import pywintypes
 import win32api
 import win32con
 import winxpgui as win32gui
@@ -248,15 +249,16 @@ def findControl(topHwnd,
                 retryInterval=0.1):   ###, checkImmediate=None):
     '''Find a control.
     
-    You can identify a control within a top level window, using caption, class,
-    a custom selection function, or any combination of these. (Multiple
-    selection criteria are ANDed. If this isn't what's wanted, use a selection
-    function.)
-    
-    If no control matching the specified selection criteria is found
-    immediately, further attempts will be made. The retry interval and maximum
-    time to wait for a matching control can be specified.
+You can identify a control within a top level window, using caption, class,
+a custom selection function, or any combination of these. (Multiple
+selection criteria are ANDed. If this isn't what's wanted, use a selection
+function.)
 
+If no control matching the specified selection criteria is found
+immediately, further attempts will be made. The retry interval and maximum
+time to wait for a matching control can be specified.
+
+::
     Arguments:
     topHwnd             The window handle of the top level window in which the
                         required controls reside.
@@ -317,7 +319,7 @@ def findControl(topHwnd,
                               repr(maxWait) +
                               ", retryInterval=" +
                               str(retryInterval))
-    elif controls:
+    if controls:
         return controls[0]
     if (maxWait-retryInterval) >= 0:
         time.sleep(retryInterval)
@@ -328,7 +330,7 @@ def findControl(topHwnd,
                                selectionFunction=selectionFunction,
                                maxWait=maxWait-retryInterval,
                                retryInterval=retryInterval)
-        except WinGuiAutoError:
+        except WinGuiAutoError as exc:
             raise WinGuiAutoError("No control found for topHwnd=" +
                                   repr(topHwnd) +
                                   ", wantedText=" +
@@ -340,7 +342,7 @@ def findControl(topHwnd,
                                   ", maxWait=" +
                                   repr(maxWait) +
                                   ", retryInterval=" +
-                                  str(retryInterval))
+                                  str(retryInterval)) from exc
         
     raise WinGuiAutoError("No control found for topHwnd=" +
                               repr(topHwnd) +
@@ -395,7 +397,7 @@ def findControls(topHwnd,
         except win32gui.error:
             # This seems to mean that the control *cannot* have child windows,
             # i.e. is not a container.
-            return
+            return None
         for childHwnd, windowText, windowClass in childWindows:
             descendantMatchingHwnds = searchChildWindows(childHwnd)
             if descendantMatchingHwnds:
@@ -425,8 +427,7 @@ def findControls(topHwnd,
     if hlist:
         ## remove duplicates
         return list(set(hlist))
-    else:
-        return hlist
+    return hlist
     
 def findAdditionalControls(controls,
                  wantedText=None,
@@ -468,7 +469,7 @@ def findAdditionalControls(controls,
         except win32gui.error:
             # This seems to mean that the control *cannot* have child windows,
             # i.e. is not a container.
-            return
+            return None
         for childHwnd, windowText, windowClass in childWindows:
             descendantMatchingHwnds = searchChildWindows(childHwnd)
             if descendantMatchingHwnds:
@@ -637,10 +638,10 @@ def activateMenuItem(hWnd, menuItemPath):
                 _dump, hMenu, hMenuItemCount = _findNamedSubmenu(hMenu,
                                                                 hMenuItemCount,
                                                                 submenu)
-            except WinGuiAutoError:
+            except WinGuiAutoError as exc:
                 raise WinGuiAutoError("Menu path " +
                                       repr(menuItemPath) +
-                                      " cannot be found.")
+                                      " cannot be found.") from exc
            
     # Get required menu item's ID. (the one at the end).
     menuItem = menuItemPath[-1]
@@ -653,10 +654,10 @@ def activateMenuItem(hWnd, menuItemPath):
             subMenuIndex, _dump1, _dump2 = _findNamedSubmenu(hMenu,
                                         hMenuItemCount,
                                         menuItem)
-        except WinGuiAutoError:
+        except WinGuiAutoError as exc:
             raise WinGuiAutoError("Menu path " +
                                   repr(menuItemPath) +
-                                  " cannot be found.")
+                                  " cannot be found.") from exc
         menuItemID = ctypes.windll.user32.GetMenuItemID(hMenu, subMenuIndex)
 
     # Activate    
@@ -701,10 +702,10 @@ def getMenuInfo(hWnd, menuItemPath):
                                                                 submenu)
                 submenuInfo = _getMenuInfo(hMenu, submenuIndex)
                 hMenu = new_hMenu
-            except WinGuiAutoError:
+            except WinGuiAutoError as exc:
                 raise WinGuiAutoError("Menu path " +
                                       repr(menuItemPath) +
-                                      " cannot be found.")
+                                      " cannot be found.") from exc
     if submenuInfo is None:
         raise WinGuiAutoError("Menu path " +
                               repr(menuItemPath) +
@@ -906,9 +907,9 @@ def getEditText(hwnd, visible=False, classname=None):
     
     '''
     if classname and classname == 'Scintilla':
-        getline, getlinecount = scintillacon.SCI_GETLINE, scintillacon.SCI_GETLINECOUNT
+        getline, _getlinecount = scintillacon.SCI_GETLINE, scintillacon.SCI_GETLINECOUNT
     else:
-        getline, getlinecount = win32con.EM_GETLINE, win32con.EM_GETLINECOUNT
+        getline, _getlinecount = win32con.EM_GETLINE, win32con.EM_GETLINECOUNT
         
     if visible:
         firstLine = getFirstVisibleLine(hwnd)
@@ -946,7 +947,7 @@ def setEditText(hwnd, text, append=False, classname=None):
                     setEditText(editArea, ["", "And a 3rd one!"], append=True)
     '''
 
-    if type(text) in (types.StringType,):
+    if isinstance(text, str):
         pass
     else:
         text = '\r\n'.join(text)
@@ -986,11 +987,11 @@ def replaceEditText(hwnd, text, classname=None):
                     be become a a separate line in the control.
     '''
     if classname and classname == "Scintilla":
-        setsel, replacesel = scintillacon.SCI_SETSEL, scintillacon.SCI_REPLACESEL
+        _setsel, replacesel = scintillacon.SCI_SETSEL, scintillacon.SCI_REPLACESEL
     else:
-        setsel, replacesel = win32con.EM_SETSEL, win32con.EM_REPLACESEL
+        _setsel, replacesel = win32con.EM_SETSEL, win32con.EM_REPLACESEL
     
-    if type(text) in (types.StringType,):
+    if isinstance(text. str):
         pass
     else:
         text = '\n'.join(text)
@@ -1020,7 +1021,7 @@ def appendEditText(hwnd, text, place="end", classname=None):
     else:
         replacesel = win32con.EM_REPLACESEL
     
-    if type(text) in (types.StringType,):
+    if isinstance(text, str):
         pass
     else:
         text = '\n'.join(text)
@@ -1056,7 +1057,7 @@ def isVisible(hndle, classname=None):
     if classname == 'Scintilla':
         testnum = scintillacon.SCI_GETFIRSTVISIBLELINE
     else:
-        return # not know how to do...
+        return None   # not know how to do...
         
     v = win32gui.SendMessage(hndle, testnum)
     return v
@@ -1118,8 +1119,8 @@ def getTextLine(hndle, lineNum, classname=None):
                                         lineNum, LINE_TEXT_BUFFER)
     if (LINE_BUFFER_LENGTH - lenReceived) < 10:
         LINE_BUFFER_LENGTH *= 2
-        bufferlength  = struct.pack('i', LINE_BUFFER_LENGTH) # This is a C style int.
-        LINE_TEXT_BUFFER = array.array('b', bufferlength + b' ' * LINE_BUFFER_LENGTH)
+        bbufferlength  = struct.pack('i', LINE_BUFFER_LENGTH) # This is a C style int.
+        LINE_TEXT_BUFFER = array.array('b', bbufferlength + b' ' * LINE_BUFFER_LENGTH)
         print('line too small, double to %s'% LINE_BUFFER_LENGTH)
         return getTextLine(hndle, lineNum)
 
@@ -1312,12 +1313,12 @@ def _getMultipleWindowValues(hwnd, getCountMessage, getValueMessage, first=0):
     result = []
     
     MAX_VALUE_LENGTH = 256
-    bufferlength  = struct.pack('i', MAX_VALUE_LENGTH) # This is a C style int.
+    bbufferlength  = struct.pack('i', MAX_VALUE_LENGTH) # This is a C style int.
     valuecount = win32gui.SendMessage(hwnd, getCountMessage, 0, 0)
     for itemIndex in range(first, valuecount):
         valuebuffer = array.array('c',
-                                  bufferlength +
-                                  ' ' * (MAX_VALUE_LENGTH - len(bufferlength)))
+                                  bbufferlength +
+                                  ' ' * (MAX_VALUE_LENGTH - len(bbufferlength)))
         valueLength = win32gui.SendMessage(hwnd,
                                            getValueMessage,
                                            itemIndex,
@@ -1347,11 +1348,11 @@ def _windowEnumerationHandler(hwnd, resultList):
         if wText:
             text = win32gui.GetWindowText(hwnd)
             if wText and _normaliseText(text).find(wText) == -1:
-                return
+                return None
         if wClass:
             className = win32gui.GetClassName(hwnd)
             if wClass and className.find(wClass) != 0:
-                return
+                return None
         if not wText:
             text = win32gui.GetWindowText(hwnd)
         if not wClass:
@@ -1535,8 +1536,8 @@ def test_with_pythonwin(topHwnd):
     """pass top handle, use selection function from windowsparameter.py
     """
     import windowparameters
-    selFunc = windowparameters.getPythonwinEditControl
-    controls = findControls(topHwnd, selectionFunction=selFunc)
+    sselFunc = windowparameters.getPythonwinEditControl
+    controls = findControls(topHwnd, selectionFunction=sselFunc)
     print('controls pythonwin: %s'% controls)
 
     contents = dumpWindow(topHwnd)
@@ -1560,80 +1561,81 @@ def test_with_komodo_messages():
     # result:
     # Hello, mate! Hello, this is a test
 
-def doHotshotTest(editControl, nTests=6):
-    """do some testing on control.
-    
-    With each higher value of nTests the amount of text is doubled (in the last set/get calls)
-    """
-    import hotshot, hotshot.stats
-    filePath = r'D:\messagesfunctions.prof'
-    prof = hotshot.Profile(filePath)
-    prof.runcall(hotshot_test, editControl, nTests)
-    prof.close()
-    stats = hotshot.stats.load(filePath)
-    stats.strip_dirs()
-    stats.sort_stats('time', 'calls')
-    stats.print_stats(20)
-
-def doHotshotTestField(editControl):
-    """do some testing on control.
-    
-    With each higher value of nTests the amount of text is doubled (in the last set/get calls)
-    """
-    import hotshot, hotshot.stats
-    filePath = r'D:\messagesfunctions.prof'
-    prof = hotshot.Profile(filePath)
-    prof.runcall(hotshot_test_selection, editControl, 21, 23)
-    prof.close()
-    stats = hotshot.stats.load(filePath)
-    stats.strip_dirs()
-    stats.sort_stats('time', 'calls')
-    stats.print_stats(20)
-
-def hotshot_test_selection(editArea, selStart, selEnd):
-    """do some actions in hotshot profile mode, when a field is selected
-    """
-    setSelection(editArea, selStart, selEnd)
-    time.sleep(1)
-    _t = getEditText(editArea)
-    time.sleep(1)
-    print('selection at: %s, %s'% (selStart, selEnd))
-
-def doHotshotTestOutsideField(editControl):
-    """do some testing on control.
-    
-    With each higher value of nTests the amount of text is doubled (in the last set/get calls)
-    """
-    import hotshot, hotshot.stats
-    filePath = r'D:\messagesfunctionsoutside.prof'
-    prof = hotshot.Profile(filePath)
-    prof.runcall(hotshot_test_selection, editControl, 10, 20)
-    prof.close()
-    stats = hotshot.stats.load(filePath)
-    stats.strip_dirs()
-    stats.sort_stats('time', 'calls')
-    stats.print_stats(20)
-
-    
-def hotshot_test(editArea, nTests):
-    """do some actions in hotshot profile mode
-    """
-    setEditText(editArea, "")
-    setEditText(editArea, "Hello, again!")
-    setEditText(editArea, "You still there?")
-    #setEditText(editArea, ["Here come", "two lines! The second one is not too short!"])
-    #setEditText(editArea, ["", "And a 3rd one! This one is considerable longer, because there must be something to test. I hope this testing gives some reliable result.", ""], append=True)
-    setEditText(editArea, ["Here come", "two lines! The second one is not too short!"])
-    setEditText(editArea, ["", "", "And a 3rd one! This one is considerable longer, because there must be something to test. I hope this testing gives some reliable result.", "", ""], append=True)
-
-
-    for _i in range(nTests):
-        t = getEditText(editArea)
-        setEditText(editArea, t, append=True)
-    result = getEditText(editArea)
-    lines = len(result)
-    lenresult = len(''.join(result))
-    print('***number of tests: %s, lines: %s, characters: %s  ***'% (nTests, lines, lenresult))
+# def doHotshotTest(editControl, nTests=6):
+#     """do some testing on control.
+#     
+#     With each higher value of nTests the amount of text is doubled (in the last set/get calls)
+#     """
+#     import hotshot,
+#     import hotshot.stats
+#     filePath = r'D:\messagesfunctions.prof'
+#     prof = hotshot.Profile(filePath)
+#     prof.runcall(hotshot_test, editControl, nTests)
+#     prof.close()
+#     stats = hotshot.stats.load(filePath)
+#     stats.strip_dirs()
+#     stats.sort_stats('time', 'calls')
+#     stats.print_stats(20)
+# 
+# def doHotshotTestField(editControl):
+#     """do some testing on control.
+#     
+#     With each higher value of nTests the amount of text is doubled (in the last set/get calls)
+#     """
+#     import hotshot, hotshot.stats
+#     filePath = r'D:\messagesfunctions.prof'
+#     prof = hotshot.Profile(filePath)
+#     prof.runcall(hotshot_test_selection, editControl, 21, 23)
+#     prof.close()
+#     stats = hotshot.stats.load(filePath)
+#     stats.strip_dirs()
+#     stats.sort_stats('time', 'calls')
+#     stats.print_stats(20)
+# 
+# def hotshot_test_selection(editArea, selStart, selEnd):
+#     """do some actions in hotshot profile mode, when a field is selected
+#     """
+#     setSelection(editArea, selStart, selEnd)
+#     time.sleep(1)
+#     _t = getEditText(editArea)
+#     time.sleep(1)
+#     print('selection at: %s, %s'% (selStart, selEnd))
+# 
+# def doHotshotTestOutsideField(editControl):
+#     """do some testing on control.
+#     
+#     With each higher value of nTests the amount of text is doubled (in the last set/get calls)
+#     """
+#     import hotshot, hotshot.stats
+#     filePath = r'D:\messagesfunctionsoutside.prof'
+#     prof = hotshot.Profile(filePath)
+#     prof.runcall(hotshot_test_selection, editControl, 10, 20)
+#     prof.close()
+#     stats = hotshot.stats.load(filePath)
+#     stats.strip_dirs()
+#     stats.sort_stats('time', 'calls')
+#     stats.print_stats(20)
+# 
+#     
+# def hotshot_test(editArea, nTests):
+#     """do some actions in hotshot profile mode
+#     """
+#     setEditText(editArea, "")
+#     setEditText(editArea, "Hello, again!")
+#     setEditText(editArea, "You still there?")
+#     #setEditText(editArea, ["Here come", "two lines! The second one is not too short!"])
+#     #setEditText(editArea, ["", "And a 3rd one! This one is considerable longer, because there must be something to test. I hope this testing gives some reliable result.", ""], append=True)
+#     setEditText(editArea, ["Here come", "two lines! The second one is not too short!"])
+#     setEditText(editArea, ["", "", "And a 3rd one! This one is considerable longer, because there must be something to test. I hope this testing gives some reliable result.", "", ""], append=True)
+# 
+# 
+#     for _i in range(nTests):
+#         t = getEditText(editArea)
+#         setEditText(editArea, t, append=True)
+#     result = getEditText(editArea)
+#     lines = len(result)
+#     lenresult = len(''.join(result))
+#     print('***number of tests: %s, lines: %s, characters: %s  ***'% (nTests, lines, lenresult))
 
 def findPythonwinControl(topHwnd):
     """pass the top handle"""
@@ -1649,6 +1651,7 @@ def findPythonwinControl(topHwnd):
 
 def findDragonBar():
     db = findTopWindow(wantedClass='DgnBarMainWindowCls')
+    return db
     
 def testExplorerViews(hndle):
     # PostMessage, 0x111, 28713,0,, ahk_pid %Win_pid% medium icons, AHK
@@ -1658,9 +1661,11 @@ def testExplorerViews(hndle):
     
         
 if __name__ == '__main__':
-    #findDragonBar()
+    # print(f'findDragonBar {findDragonBar()}')
     
-    #self_test()
+    
+    ## Notepad:  (hotshot tests commented, so next 10 lines won't work)
+    # self_test()
     #editArea = test_with_aligen1(setText=0)
     #editArea = test_with_dragonpad1(setText=0)
     #editArea = test_with_notepad1()
@@ -1673,7 +1678,7 @@ if __name__ == '__main__':
     #    doHotshotTestOutsideField(editArea)
     
     #getFolderFromCabinetWClass(1180166)
-    #test_with_excel()
+    # test_with_excel()
     #test_with_komodo_messages()
     #findPythonwinControl(133488)  # uses selectionFunction getPythonwinEditControl
     #test_with_pythonwin(133488)
@@ -1681,8 +1686,8 @@ if __name__ == '__main__':
     
     # view settings explorer (this one fails!)
     # testExplorerViews(986418)
-    # g = getFolderFromCabinetWClass(1837622)
-    # g = getFolderFromDialog(394720, '#32770')
+    # print(f'getFolderFromCabinetWClass: {getFolderFromCabinetWClass(394420)}')
+    print(f'getFolderFromDialog: {getFolderFromDialog(133386, "#32770")}')
     # print(g, type(g))
     # hndle = getForegroundWindow()
     # SendKeys(hndle, "{shift+a}")   ## fails

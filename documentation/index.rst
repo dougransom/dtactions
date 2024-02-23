@@ -1,7 +1,12 @@
 Welcome to dtactions's documentation!!!
 =======================================
 
-This branch has not been published yet via pip, is still in development.
+This project aims at providing functions that can be useful to any of the other projects, that run on Windows.
+
+In use for Unimacro and Vocola at the moment.
+
+
+
 
 .. toctree::
    :maxdepth: 2

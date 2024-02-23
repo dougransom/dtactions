@@ -20,11 +20,20 @@ requirements:
    $ cd documentation
    $ pip install -r requirements.txt
 
-Then run the following command on Windows to build the documentation:
+Then run the following command on Windows to build the documentation (Windows Command Prompt (cmd):
 
 .. code:: shell
 
    $ make.bat html
+
+or Windows Powershell:
+
+.. code:: powershell
+
+   $ .\make html
+   
+
+
 
 Or use the Makefile on other systems:
 

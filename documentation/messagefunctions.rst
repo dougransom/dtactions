@@ -8,5 +8,4 @@ foreground hndle of an open application.
 
 Windows only.
 
-.. automodule:: dtactions.messagefunctions
-   :members:
+Please consult the sourcecode to inspect the code (:code:`messagesfunctions.py`)

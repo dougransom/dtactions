@@ -511,6 +511,11 @@ def selFuncExplorerAddress(_hndle, text, Class):
     
     Adres (Dutch) or Address (English) and other languages ???
     """
+    if text:
+            print(f"Handle: {_hndle} text: {text}  Class: {Class} ")
+
+    if Class == "ShellTabWindowClass":
+        return True
     if Class == 'ToolbarWindow32':
         if text and text.startswith('Adres: ') or text.startswith('Address: '):
             return True
@@ -533,6 +538,7 @@ def getFolderFromCabinetWClass(hndle):
     (Unimacro grammar _folders)
     """
     controls = findControls(hndle, selectionFunction=selFuncExplorerAddress)
+
     if controls:
         hndle = controls[0]
         text = getwindowtext(hndle)
@@ -556,20 +562,24 @@ def getFolderFromDialog(hndle, className):
     return None
         
 def extractFolderFromWindowText(text):
-    """get folder info from CabinetWClass or #32770 window:
+    """get folder info from CabinetWClass or #32770 window or ShellTabWindowClass:
     
     if "location:" is found, get that info, urlparse unquote(d)
     if otherwise : is found (Adress: or Adres: (enx or nld)) return the info after that :
     
     no check of valid directory is done
     """
+    text_stripped=text.strip()
     if text.find("location:") >= 0:
         # ms-search:
         folder = text.split("location:", 1)[1]
         folder = unquote(folder)
-    elif text.find(":") >= 0:
+    elif text.find(": ") >= 0:
         # Adress: or Adres:
         folder = text.split(": ", 1)[1]
+    elif len(text_stripped) >0:
+        # in the case of ShellTabWindowClass it should be a folder.
+        folder=text_stripped
     else:
         # no activefolder info:
         return None
@@ -1686,7 +1696,7 @@ if __name__ == '__main__':
     
     # view settings explorer (this one fails!)
     # testExplorerViews(986418)
-    # print(f'getFolderFromCabinetWClass: {getFolderFromCabinetWClass(394420)}')
+    print(f'getFolderFromCabinetWClass: {getFolderFromCabinetWClass(983200)}')
     print(f'getFolderFromDialog: {getFolderFromDialog(133386, "#32770")}')
     # print(g, type(g))
     # hndle = getForegroundWindow()

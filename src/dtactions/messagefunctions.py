@@ -510,13 +510,17 @@ def selFuncExplorerAddress(_hndle, text, Class):
     
     Adres (Dutch) or Address (English) and other languages ???
     """
-    if text:
-            print(f"Handle: {_hndle} text: {text}  Class: {Class} ")
+    if not text:
+        return
+    
+    # print(f"Handle: {_hndle} text: {text}  Class: {Class} ")
+        
 
     if Class == "ShellTabWindowClass":
         return True
     if Class == 'ToolbarWindow32':
-        if text and text.startswith('Adres: ') or text.startswith('Address: '):
+        if text and text.find(': ') >= 0:
+            # print(f'ToolbarWindow32: "{text}"')
             return True
     return None
 
@@ -567,19 +571,18 @@ def extractFolderFromWindowText(text):
     if otherwise ": " is found (Adress: or Adres: (enx or nld)) return the info after that ": " (Windows 10)
     
     """
-    if not text:
+    if not text.strip():
         return None
+    text = text.strip()
     if os.path.isdir(text):
-        return text
+        return os.path.abspath(text)
     if text.find(": ") >= 0:
         # Adress: or Adres:
-        folder = text.split(": ", 1)[1]
-        if folder:
-            if os.path.isdir(folder):
-        folder=text_stripped
-                return folder
-            print(f'messagesfunctions, extractFolderFromWindowText: invalid folder: "{folder}"')
-            return None
+        folder = text.split(": ", 1)[1].strip()
+        if folder and os.path.isdir(folder):
+                return os.path.abspath(folder)
+        print(f'messagesfunctions, extractFolderFromWindowText: invalid folder: "{folder}"')
+        return None
     return None
     
 def getTopMenu(hWnd):
@@ -1693,7 +1696,7 @@ if __name__ == '__main__':
     
     # view settings explorer (this one fails!)
     # testExplorerViews(986418)
-    print(f'getFolderFromCabinetWClass: {getFolderFromCabinetWClass(328297)}')
+    print(f'getFolderFromCabinetWClass: {getFolderFromCabinetWClass(328296)}')
     # print(f'getFolderFromDialog: {getFolderFromDialog(264402, "#32770")}')
     # print(g, type(g))
     # hndle = getForegroundWindow()

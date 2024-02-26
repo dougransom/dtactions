@@ -18,7 +18,7 @@
 # GLOBALLY corrected spelling: seperator -> separator
 #                            : descendent -> descendant
 # added findMenuItem
-# adapted for NatSpeak/NatLink interaction, Quintijn Hoogenboomhallo
+# adapted for NatSpeak/NatLink interaction, Quintijn Hoogenboom
 # october 2009. (starting with watsup utilities)
 # pylint: disable=C0302, C0115
 '''"Windows GUI automation utilities"
@@ -48,12 +48,12 @@ Helper class and functions
 
 import array
 import ctypes
-import types
 import os
 import struct
 import time
 import pprint
 import re
+import copy
 ## python 3 only:
 from urllib.parse import unquote
 
@@ -61,6 +61,7 @@ from urllib.parse import unquote
 import win32api
 import win32con
 import winxpgui as win32gui
+from dtactions import scintillacon
 
 GetWindowText = ctypes.windll.user32.GetWindowTextW
 GetWindowTextLength = ctypes.windll.user32.GetWindowTextLengthW
@@ -70,8 +71,6 @@ braceExact = re.compile (r'[{][^}]+[}]$')
 hasBraces = re.compile (r'([{].+?[}])')
 BracesExtractKey = re.compile (r'^[{]((alt|ctrl|shift)[+])*(?P<k>[^ ]+?)( [0-9]+)?[}]$', re.I)
 
-## Scintilla constants:
-# from dragonfly.actions import scintillacon
 
 def findTopWindow(wantedText=None,
                   wantedClass=None):
@@ -210,7 +209,7 @@ def dumpWindow(hwnd):
     except win32gui.error:
         # No child windows
         return windows # empty here
-    for window in windows:
+    for window in copy.copy(windows):
         childHwnd, _windowText, _windowClass = window
         window_content = dumpWindow(childHwnd)
         if window_content:
@@ -558,22 +557,23 @@ def getFolderFromDialog(hndle, className):
 def extractFolderFromWindowText(text):
     """get folder info from CabinetWClass or #32770 window:
     
-    if "location:" is found, get that info, urlparse unquote(d)
-    if otherwise : is found (Adress: or Adres: (enx or nld)) return the info after that :
+    if text is a folder, take it, (Windows 11)
+    if otherwise ": " is found (Adress: or Adres: (enx or nld)) return the info after that ": " (Windows 10)
     
-    no check of valid directory is done
     """
-    if text.find("location:") >= 0:
-        # ms-search:
-        folder = text.split("location:", 1)[1]
-        folder = unquote(folder)
-    elif text.find(":") >= 0:
+    if not text:
+        return None
+    if os.path.isdir(text):
+        return text
+    if text.find(": ") >= 0:
         # Adress: or Adres:
         folder = text.split(": ", 1)[1]
-    else:
-        # no activefolder info:
-        return None
-    return folder
+        if folder:
+            if os.path.isdir(folder):
+                return folder
+            print(f'messagesfunctions, extractFolderFromWindowText: invalid folder: "{folder}"')
+            return None
+    return None
     
 def getTopMenu(hWnd):
     '''Get a window's main, top level menu.
@@ -906,11 +906,11 @@ def getEditText(hwnd, visible=False, classname=None):
     the end of line characters must be corrected depending on the control.
     
     '''
-    if classname and classname == 'Scintilla':
-        getline, _getlinecount = scintillacon.SCI_GETLINE, scintillacon.SCI_GETLINECOUNT
-    else:
-        getline, _getlinecount = win32con.EM_GETLINE, win32con.EM_GETLINECOUNT
-        
+    # if classname and classname == 'Scintilla':
+    #     getline, _getlinecount = scintillacon.SCI_GETLINE, scintillacon.SCI_GETLINECOUNT
+    # else:
+    #     getline, _getlinecount = win32con.EM_GETLINE, win32con.EM_GETLINECOUNT
+    #     
     if visible:
         firstLine = getFirstVisibleLine(hwnd)
     else:
@@ -1042,7 +1042,7 @@ def getSelection(hndle, classname=None):
     """returns the start and end position of the selection.
     """
     if classname and classname == "Scintilla":
-        getsel= scintillacon.SCI_GETSEL
+        getsel= scintillacon.SCI_GETSELECTIONSTART, scintillacon.SCI_GETSELECTIONEND
     else:
         getsel = win32con.EM_GETSEL
     
@@ -1124,7 +1124,7 @@ def getTextLine(hndle, lineNum, classname=None):
         print('line too small, double to %s'% LINE_BUFFER_LENGTH)
         return getTextLine(hndle, lineNum)
 
-    return LINE_TEXT_BUFFER.tostring()[:lenReceived]
+    return LINE_TEXT_BUFFER.tobytes()[:lenReceived]
 
 def getRawTextLength(hndle, classname=None):
     """get the one stroke text length, this is with uncorrected \r\n characters
@@ -1291,7 +1291,7 @@ def getWindowTextAll(hwnd, rawLength=None):
         rawLength = getRawTextLength(hwnd) + 1000
         return getWindowTextAll(hwnd, rawLength=rawLength)
         
-    result = TEXT_BUFFER.tostring()[:valueLength]
+    result = TEXT_BUFFER.tobytes()[:valueLength]
     return result, valueLength
 
 def _getMultipleWindowValues(hwnd, getCountMessage, getValueMessage, first=0):
@@ -1323,7 +1323,7 @@ def _getMultipleWindowValues(hwnd, getCountMessage, getValueMessage, first=0):
                                            getValueMessage,
                                            itemIndex,
                                            valuebuffer)
-        result.append(valuebuffer.tostring()[:valueLength])
+        result.append(valuebuffer.tobytes()[:valueLength])
     return result
 
 def _windowEnumerationHandler(hwnd, resultList):
@@ -1532,17 +1532,17 @@ def test_with_excel():
         
     return excelWindows
 
-def test_with_pythonwin(topHwnd):
-    """pass top handle, use selection function from windowsparameter.py
-    """
-    import windowparameters
-    sselFunc = windowparameters.getPythonwinEditControl
-    controls = findControls(topHwnd, selectionFunction=sselFunc)
-    print('controls pythonwin: %s'% controls)
-
-    contents = dumpWindow(topHwnd)
-    pprint.pprint(contents)
-    return controls
+# def test_with_pythonwin(topHwnd):
+#     """pass top handle, use selection function from windowsparameter.py
+#     """
+#     import windowparameters
+#     sselFunc = windowparameters.getPythonwinEditControl
+#     controls = findControls(topHwnd, selectionFunction=sselFunc)
+#     print('controls pythonwin: %s'% controls)
+# 
+#     contents = dumpWindow(topHwnd)
+#     pprint.pprint(contents)
+#     return controls
 
 def test_with_komodo_messages():
     """also TCP model could be set up, this is the try via scintilla window and messages
@@ -1686,8 +1686,8 @@ if __name__ == '__main__':
     
     # view settings explorer (this one fails!)
     # testExplorerViews(986418)
-    # print(f'getFolderFromCabinetWClass: {getFolderFromCabinetWClass(394420)}')
-    print(f'getFolderFromDialog: {getFolderFromDialog(133386, "#32770")}')
+    print(f'getFolderFromCabinetWClass: {getFolderFromCabinetWClass(328297)}')
+    # print(f'getFolderFromDialog: {getFolderFromDialog(264402, "#32770")}')
     # print(g, type(g))
     # hndle = getForegroundWindow()
     # SendKeys(hndle, "{shift+a}")   ## fails

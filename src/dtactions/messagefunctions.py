@@ -510,6 +510,11 @@ def selFuncExplorerAddress(_hndle, text, Class):
     
     Adres (Dutch) or Address (English) and other languages ???
     """
+    if text:
+            print(f"Handle: {_hndle} text: {text}  Class: {Class} ")
+
+    if Class == "ShellTabWindowClass":
+        return True
     if Class == 'ToolbarWindow32':
         if text and text.startswith('Adres: ') or text.startswith('Address: '):
             return True
@@ -532,6 +537,7 @@ def getFolderFromCabinetWClass(hndle):
     (Unimacro grammar _folders)
     """
     controls = findControls(hndle, selectionFunction=selFuncExplorerAddress)
+
     if controls:
         hndle = controls[0]
         text = getwindowtext(hndle)
@@ -555,7 +561,7 @@ def getFolderFromDialog(hndle, className):
     return None
         
 def extractFolderFromWindowText(text):
-    """get folder info from CabinetWClass or #32770 window:
+    """get folder info from CabinetWClass or #32770 window or ShellTabWindowClass:
     
     if text is a folder, take it, (Windows 11)
     if otherwise ": " is found (Adress: or Adres: (enx or nld)) return the info after that ": " (Windows 10)
@@ -570,6 +576,7 @@ def extractFolderFromWindowText(text):
         folder = text.split(": ", 1)[1]
         if folder:
             if os.path.isdir(folder):
+        folder=text_stripped
                 return folder
             print(f'messagesfunctions, extractFolderFromWindowText: invalid folder: "{folder}"')
             return None

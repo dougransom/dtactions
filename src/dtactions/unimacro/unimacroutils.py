@@ -11,7 +11,7 @@
 Previous this was natlinkutilsqh.py in unimacro
 
 """
-#pylint:disable=C0302, C0116, C0321, R0912, R0913, R0914, R0915, W0613, C0209, W0602
+#pylint:disable=C0302, C0116, C0321, R0912, R0913, R0914, R0915, W0613, C0209, W0602, R1715
 #pylint:disable=E1101
 import time
 import re
@@ -811,13 +811,13 @@ def buttonClick(button='left', nclick=1, modifiers=None):
     """do a natspeak buttonclick, but release mouse first if necessary
     """
     # make button numeric:
-    buttons = {'left':1, 'right':2, 'middle':4}
-    if button in buttons:
-       button = buttons[button]
+    Buttons = {'left':1, 'right':2, 'middle':4}
+    if button in Buttons:
+        button = Buttons[button]
     if button not in [1, 2, 4]:
-       raise UnimacroError('buttonClick invalid button: %s'% button)
+        raise UnimacroError('buttonClick invalid button: %s'% button)
     if nclick not in [1,2]:
-       raise UnimacroError('buttonClick invalid number of clicks: %s'% nclick)
+        raise UnimacroError('buttonClick invalid number of clicks: %s'% nclick)
     if mouseState:
         releaseMouse()
         

@@ -511,7 +511,7 @@ def selFuncExplorerAddress(_hndle, text, Class):
     Adres (Dutch) or Address (English) and other languages ???
     """
     if not text:
-        return
+        return None
     
     # print(f"Handle: {_hndle} text: {text}  Class: {Class} ")
         
@@ -580,8 +580,8 @@ def extractFolderFromWindowText(text):
         # Adress: or Adres:
         folder = text.split(": ", 1)[1].strip()
         if folder and os.path.isdir(folder):
-                return os.path.abspath(folder)
-        print(f'messagesfunctions, extractFolderFromWindowText: invalid folder: "{folder}"')
+            return os.path.abspath(folder)
+        # print(f'messagesfunctions, extractFolderFromWindowText: invalid folder: "{folder}"')
         return None
     return None
     

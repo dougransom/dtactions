@@ -5,7 +5,7 @@
 #pylint:disable=C0302, C0116, R0913, R0914, R1710, R0911, R0912, R0915, C0321, W0702, W0613, W0602
 #pylint:disable=E1101
 #pylint:disable=C0209, R1728
-##TODO:
+##TODO: discard writing to debug file (possibly include logging (Doug?))
 #pylint:disable=W1514, R1732
 """This module contains actions that can be called from natlink grammars.
 
@@ -1096,26 +1096,27 @@ def do_ALTNUM(s, **kw):
     
     werkt niet!!
     """
-    if isinstance(s, int):
-        s = str(s)
-    keydown = natlinkutils.wm_syskeydown
-    keyup = natlinkutils.wm_syskeyup
-    
-    altdown = (keydown, natlinkutils.vk_menu, 1)
-    altup = (keyup, natlinkutils.vk_menu, 1)
-    numkeyzero = win32con.VK_NUMPAD0
-
-    sequence = [altdown]
-    for code in s:
-        if not code in '0123456789':
-            print('code should be a digit, not: %s (%s)'% (code, s))
-            return
-        _i = int(s)
-        keycode = numkeyzero + int(code)
-        sequence.append( (keydown, keycode, 1))
-        sequence.append( (keyup, keycode, 1))
-    sequence.append(altup)
-    natlink.playEvents(sequence)
+    print('unimacroaction ALTNUM does not work')
+    # if isinstance(s, int):
+    #     s = str(s)
+    # keydown = natlinkutils.wm_syskeydown
+    # keyup = natlinkutils.wm_syskeyup
+    # 
+    # altdown = (keydown, natlinkutils.vk_menu, 1)
+    # altup = (keyup, natlinkutils.vk_menu, 1)
+    # numkeyzero = win32con.VK_NUMPAD0
+    # 
+    # sequence = [altdown]
+    # for code in s:
+    #     if not code in '0123456789':
+    #         print('code should be a digit, not: %s (%s)'% (code, s))
+    #         return
+    #     _i = int(s)
+    #     keycode = numkeyzero + int(code)
+    #     sequence.append( (keydown, keycode, 1))
+    #     sequence.append( (keyup, keycode, 1))
+    # sequence.append(altup)
+    # natlink.playEvents(sequence)
     
 def do_SCLIP(*s, **kw):
     """send keystrokes through the clipboard
@@ -1684,7 +1685,7 @@ def do_ALERT(alert=1, **kw):
         except ValueError:
             nAlert = 1
         for _i in range(nAlert):
-            natlink.execScript('PlaySound "'+thisDir+'\\ding.wav"')
+            natlink.execScript('PlaySound "'+str(thisDir)+'\\ding.wav"')
     unimacroutils.Wait(0.1)
     if micState != 'off':
         natlink.setMicState(micState)
@@ -1844,17 +1845,18 @@ def Message(t, title=None, icon=64, alert=None, switchOnMic=None, progInfo=None,
         do_ALERT(alert)
     micState = natlink.getMicState()
     #print "Message, initial mic state: %s"% micState
-    
-    if switchOnMic and micState in ['sleeping', 'off']:
-        natlink.setMicState('on')
+    natlink.setMicState('on')
 
     try:
+        ## TODO: problem with accented characters, UnicodeEncodeError
         natlink.execScript('MsgBoxConfirm "%s", %s, "%s"'% (tt, icon, title))
     except SyntaxError:
         print('execScript SyntaxError\n' \
               'tt: %s\n' \
               'icon: %s\n' \
               'title: %s\n'% (tt, icon, title))
+    except UnicodeEncodeError:
+        print(f'unicodeencodeerror, text: "{tt}", title: "{title}"')
     newMicState = natlink.getMicState()
     if switchOnMic and micState != newMicState:
         natlink.setMicState(micState)
@@ -2306,8 +2308,14 @@ else:
         pass
 
 if __name__ == '__main__':
-    _s = 551345646373737373
-    do_SCLIP(_s)
+    # _s = 551345646373737373
+    # do_SCLIP(_s)
     # UnimacroBringUp("edit", r"C:\Users\Gebruiker\Documents\.natlink\UnimacroGrammars\_brackets.txt")
-    
+    # do_AHK("showmessageswindow.ahk")
+    try:
+        natlink.natConnect()
+        do_MESSAGE("hÉy")
+    finally:
+        natlink.natDisconnect()
+    pass
     

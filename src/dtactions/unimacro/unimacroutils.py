@@ -640,7 +640,10 @@ def doMouse(absorrel, screenorwindow, xpos, ypos, mouse='left', nClick=1, modifi
     Therefore the mouse state is remembered in the variable mouseState.
     
     """
-     #pylint:disable=W0603
+    #pylint:disable=W0603
+    if status.getDNSVersion() == 16:
+        print('unimacroutils doMouse does not work with Dragon 16')
+        return
     global mouseState
     hndle = natlink.getCurrentModule()[2]
     rect = None

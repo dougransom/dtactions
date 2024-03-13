@@ -57,7 +57,7 @@ import copy
 ## python 3 only:
 from urllib.parse import unquote
 
-# import pywintypes
+import pywintypes
 import win32api
 import win32con
 import winxpgui as win32gui
@@ -1348,7 +1348,7 @@ def _windowEnumerationHandler(hwnd, resultList):
         return None
     # try:
     _testHndle = win32gui.GetWindow(hwnd, 0)
-    # except pywintypes.error:
+    # except pywintypesntypes.error:
     #     if details[0] == 1400:
     #         print(f'caught 1400 error, skip this window: {hwnd}'% hwnd)
     #         return None

@@ -693,6 +693,8 @@ def killWindow(hndle=None, key_close=None, key_close_dialog=None, silent=True):
             return mess
     
     ## close the window:
+    if not silent:
+        print(f'killWindow, try the close key {key_close}')
     sendkeys(key_close)
     newProgInfo = getProgInfo()
     if newProgInfo.prog != progInfo.prog:

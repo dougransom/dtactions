@@ -13,7 +13,7 @@ readme = "README.md"
 dependencies= [
 	"pywin32 >= 300",
 	"debugpy",
-	"platformdirs"
+	"platformdirs",
 ]
 
 classifiers=[	"Development Status :: 4 - Beta",

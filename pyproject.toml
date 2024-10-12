@@ -69,3 +69,8 @@ python_files = [
 	]
  
 
+[tool.ruff]
+include = ["pyproject.toml", "src/**/*.py", "scripts/**/*.py","tests/**/*.py"]
+
+[tool.pyright]
+include = ["pyproject.toml", "src/**/*.py", "scripts/**/*.py","tests/**/*.py"]

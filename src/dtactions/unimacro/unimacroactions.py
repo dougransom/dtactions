@@ -5,8 +5,7 @@
 #pylint:disable=C0302, C0116, R0913, R0914, R1710, R0911, R0912, R0915, C0321, W0702, W0613, W0602
 #pylint:disable=E1101
 #pylint:disable=C0209, R1728
-##TODO:
-#pylint:disable=W1514, R1732
+#pylint:disable=R1735
 """This module contains actions that can be called from natlink grammars.
 
 The central functions are "doAction" and "doKeystroke".
@@ -750,7 +749,7 @@ def writeDebug(s):
         print('_actions debug: %s'% s)
        
 D =writeDebug
-def debugActions(n, openMode='w'):
+def debugActions(n, openMode='w', encoding='utf-8'):
     #pylint:disable=W0603
     global debug, debugSock
     debug = n
@@ -759,7 +758,7 @@ def debugActions(n, openMode='w'):
         debugSock.close()
         debugSock = None
     if n:
-        debugSock = open(debugFile, openMode)
+        debugSock = open(debugFile, openMode, encoding=encoding)
         
         
 
@@ -769,7 +768,7 @@ def debugActionsShow():
     #win32api.ShellExecute(0, "open", debugFile, None , "", 1)
     
 
-def showActions(progInfo=None, lineLen=60, sort=1, comingFrom=None, name=None):
+def showActions(progInfo=None, lineLen=60, sort=1, comingFrom=None, name=None, encoding='utf-8'):
     if progInfo is None:
         progInfo = unimacroutils.getProgInfo()
     language = unimacroutils.getLanguage()
@@ -793,9 +792,8 @@ def showActions(progInfo=None, lineLen=60, sort=1, comingFrom=None, name=None):
     l.append(T(language, dict(enx='consult grammar "control" for the exact commands',
                               nld='raadpleeg grammatica "controle" voor de precieze commando\'s')))
     
-    sock = open(whatFile, 'w')
-    sock.write('\n'.join(l))
-    sock.close()
+    with open(whatFile, 'w', encoding=encoding) as sock:
+        sock.write('\n'.join(l))
     if comingFrom:
         name=name or ""
         comingFrom.openFileDefault(whatFile, name=name)
@@ -1917,7 +1915,7 @@ def YesNo(t, title=None, icon=32, alert=None, defaultToSecondButton=0, progInfo=
                   'title: %s\n'% (tt, icon, title))
         unimacroutils.Wait(0.1)
         newMicState = natlink.getMicState()
-        result = (newMicState == 'sleeping')
+        result = newMicState == 'sleeping'
         if newMicState != 'off': break   # ok, either on or sleeping
         # try again (maximum 3 times)
         unimacroutils.Wait(0.05)

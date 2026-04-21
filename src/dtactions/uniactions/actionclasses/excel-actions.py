@@ -2,7 +2,7 @@ import os
 import os.path
 from pythoncom import com_error
 import win32com.client
-from dtactions.unimacroactionclasses.actionbases import AllActions
+from dtactions.actionclasses.actionbases import AllActions
 from dtactions import unimacroutils
 #pylint:disable=R0904, C0209, R0912, R0915, W0702, C0321
 

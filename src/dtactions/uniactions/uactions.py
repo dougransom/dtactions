@@ -62,20 +62,20 @@ dtactionsUserDir = dtactions.getDtactionsUserDirectory()
 # baseDirectory = thisDir
 # if not baseDirectory:
 #     raise ImportError( 'no baseDirectory found while loading actions.py, stop loading this module')
-sampleDirectory = Path(dtactionsDir)/"samples"/"unimacro"
+sampleDirectory = Path(dtactionsDir)/"samples"
 
 if not sampleDirectory.is_dir():
-    raise OSError(f'dtactions: no sample directory for unimacroactions.ini Inifile found: {sampleDirectory}"')
+    raise OSError(f'dtactions: no sample directory for uniactions.ini Inifile found: {sampleDirectory}"')
 
-sampleInifile = sampleDirectory/"unimacroactions.ini"
+sampleInifile = sampleDirectory/"uniactions.ini"
 if not sampleInifile.is_file():
-    raise OSError(f'no sample Inifile for unimacroactions found: "{sampleInifile}"')
+    raise OSError(f'no sample Inifile for unioactions found: "{sampleInifile}"')
   
 userDirectory = Path(dtactionsUserDir)/'unimacro'
 if not userDirectory.is_dir():
     userDirectory.mkdir()
     
-userInifile = userDirectory/'unimacroactions.ini'
+userInifile = userDirectory/'uniactions.ini'
 if not userInifile.is_file():
     shutil.copy(sampleInifile, userInifile)
 # print(f'unimacroactions, inifile: {userInifile}')
@@ -685,7 +685,7 @@ def get_external_module(prog):
         return external_actions_modules[prog]
     try:
         modname = '%s-actions'% str(prog)
-        _temp = __import__('dtactions.uniactions.actionclasses', fromlist=[modname])
+        _temp = __import__('dtactions.uniactions.uniactionclasses', fromlist=[modname])
         mod = getattr(_temp, modname)
         external_actions_modules[prog] = mod
         print('get_external_module, found actions module: %s'% modname)

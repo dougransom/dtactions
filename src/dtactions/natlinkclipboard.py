@@ -18,7 +18,7 @@ import copy
 import time
 import win32clipboard
 import win32con
-from dtactions.sendkeys import sendkeys, sendsystemkeys
+# from dtactions.sendkeys import sendkeys, sendsystemkeys
 #===========================================================================
 
 class Clipboard:

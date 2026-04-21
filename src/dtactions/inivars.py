@@ -9,9 +9,10 @@ import copy
 import locale
 from collections import UserDict
 from pathlib import Path
-
+# import sys, pprint
+# pprint.pprint(sys.path)
 from natlinkcore import readwritefile
-import utilsqh
+from dtactions import utilsqh   ## TODO emergency why is import utilsqh failing from unimacro _control?
 
 locale.setlocale(locale.LC_ALL, '')
 

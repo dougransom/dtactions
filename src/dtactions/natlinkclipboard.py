@@ -11,7 +11,7 @@
 This file implements an interface to the Windows system clipboard.
 
 Unfortunately, this seems not to be working satisfactory.
-For unimacro, still rely on the functions in "unimacroutils.py"
+For unimacro, still rely on the functions in "uniutils.py"
 """
 #pylint:disable=C0116, C0321, R1710, W0702, R0913, R0912, W0622
 import copy

@@ -3,7 +3,7 @@ import os.path
 from pythoncom import com_error
 import win32com.client
 from dtactions.actionclasses.actionbases import AllActions
-from dtactions import unimacroutils
+from dtactions import uniutils
 #pylint:disable=R0904, C0209, R0912, R0915, W0702, C0321
 
 class ExcelActions(AllActions):
@@ -69,7 +69,7 @@ class ExcelActions(AllActions):
     def checkForChanges(self, progInfo=None):
         """return 1 if book, sheet or position has changed since previous call
         """
-        progInfo = progInfo or unimacroutils.getProgInfo()
+        progInfo = progInfo or uniutils.getProgInfo()
         changed = 0
         if not self.app:
             self.progInfo = progInfo

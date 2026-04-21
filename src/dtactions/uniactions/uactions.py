@@ -69,9 +69,9 @@ if not sampleDirectory.is_dir():
 
 sampleInifile = sampleDirectory/"uniactions.ini"
 if not sampleInifile.is_file():
-    raise OSError(f'no sample Inifile for unioactions found: "{sampleInifile}"')
+    raise OSError(f'no sample Inifile for uniactions found: "{sampleInifile}"')
   
-userDirectory = Path(dtactionsUserDir)/'unimacro'
+userDirectory = Path(dtactionsUserDir)
 if not userDirectory.is_dir():
     userDirectory.mkdir()
     
@@ -685,7 +685,7 @@ def get_external_module(prog):
         return external_actions_modules[prog]
     try:
         modname = '%s-actions'% str(prog)
-        _temp = __import__('dtactions.uniactions.uniactionclasses', fromlist=[modname])
+        _temp = __import__('dtactions.uniactions.actionclasses', fromlist=[modname])
         mod = getattr(_temp, modname)
         external_actions_modules[prog] = mod
         print('get_external_module, found actions module: %s'% modname)

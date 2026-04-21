@@ -54,7 +54,7 @@ class KeystrokeError(Exception):
     "KeystrokeError"
 
 pendingMessage = ''
-thisDir = dtactions.getThisDir(__file__)
+thisDir = Path(__file__).parent
 dtactionsDir = dtactions.getDtactionsDirectory()
 dtactionsUserDir = dtactions.getDtactionsUserDirectory()
 
@@ -1681,7 +1681,8 @@ def do_ALERT(alert=1, **kw):
         except ValueError:
             nAlert = 1
         for _i in range(nAlert):
-            natlink.execScript('PlaySound "'+thisDir+'\\ding.wav"')
+            dingfile = str(thisDir) + '\\ding.wav"'
+            natlink.execScript('PlaySound "'+ dingfile)
     uniutils.Wait(0.1)
     if micState != 'off':
         natlink.setMicState(micState)

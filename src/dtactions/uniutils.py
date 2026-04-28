@@ -650,6 +650,8 @@ def doMouse(absorrel, screenorwindow, xpos, ypos, mouse='left', nClick=1, modifi
     global mouseState
     hndle = natlink.getCurrentModule()[2]
     rect = None
+    # just for sure, to get a start value:
+    xMin, yMin, xMax, yMax = 0, 0, 1000, 1000
     if hndle:
         rect = win32gui.GetWindowRect(hndle)
     xold,yold = natlink.getCursorPos()

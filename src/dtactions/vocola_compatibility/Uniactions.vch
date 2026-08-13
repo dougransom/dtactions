@@ -5,8 +5,9 @@
 ###
 ###     This file (Uniactions.vch) (renamed April 2026 from Unimacro.vch) is automatically updated at start up,
 ### overwriting any changes you may have made.  This is to ensure that
-### it correctly corresponds to the current version of Uniactions you
-### are running.
+### it correctly corresponds to the current version of Uniactions you are running.
+### Old calls to "Unimacro" are obsolete, but still recognised.
+### From now on use "Usc" (Uniactions shorthand command)!!!
 ### 
 
 ###########################################################################
@@ -25,8 +26,8 @@
 ##   WINKEY0()    just opens the start menu
 ## 
 
-WINKEY(key) := Uniactions("WINKEY $key");
-WINKEY0()   := Uniactions("WINKEY");
+WINKEY(key) := Usc("WINKEY $key");
+WINKEY0()   := Usc("WINKEY");
 
 ## 
 ## Typing ASCII characters by their decimal character number.
@@ -37,7 +38,7 @@ WINKEY0()   := Uniactions("WINKEY");
 ##   A(10)  types a newline ({ctrl+j})
 ## 
 
-A(n) := Uniactions("A $n");
+A(n) := Usc("A $n");
 
 
 ## 
@@ -55,54 +56,54 @@ A(n) := Uniactions("A $n");
 ##   U(040a)  same, but specified in hexadecimal (0x040a == 916)
 ##
 
-U(char) := Uniactions("U $char");
+U(char) := Usc("U $char");
 
 
 ## 
 ## Type the current date in the format "<day>/<month>"
 ## 
 
-DATE() := Uniactions("DATE");
+DATE() := Usc("DATE");
 
 ##
 ## DATE1 with format option:
 ## format may be 0 (default %d/%m meaning "<day>/<month>", but also:
 ##              %B %d "<long month day"> (default for what == speak or
 ##              %m-%d-%Y "<month> <day> <long year>" etc.
-DATE1(format) := Uniactions("DATE $format");
+DATE1(format) := Usc("DATE $format");
 ##
 ## DATE2 with format option AND what option:
 ## format may be 0 or different, see above
 ## what can be 
 ##   print  (on the screen)
 ##   speak  (with ttsplaystring)
-DATE2(format, what) := Uniactions("DATE $format, $what");
+DATE2(format, what) := Usc("DATE $format, $what");
 
 ## 
 ## Type the current time in the format "<hour>:<minute>"
 ## 
 
-TIME() := Uniactions("TIME");
+TIME() := Usc("TIME");
 
 ##
 ## TIME1 with format option:
 ## format may be 0 (default %H:%M meaning "hour:minute")
 ## or a string, eg --%M %H--  (reversing the order and putting in a space and hyphens around)
 ##
-TIME1(format) := Uniactions("TIME $format");
+TIME1(format) := Usc("TIME $format");
 ##
 ## TIME2 with format option AND what option:
 ## format may be 0 or different, see above
 ## what can be 
 ##   print  (on the screen)
 ##   speak  (with ttsplaystring)
-TIME2(format, what) := Uniactions("TIME $format, $what");
+TIME2(format, what) := Usc("TIME $format, $what");
 
 ## speaking something through TTSPlayString
-SPEAK(text) := Uniactions("SPEAK $text");
+SPEAK(text) := Usc("SPEAK $text");
 
 ## printing to Messages of Python Macros window:
-PRINT(text) := Uniactions("PRINT $text");
+PRINT(text) := Usc("PRINT $text");
 
 ##
 ## Shortcut name for SendSystemKeys($keys):
@@ -110,8 +111,8 @@ PRINT(text) := Uniactions("PRINT $text");
 ##
 ## Currently, $keys may not contain a ";".
 ##
-S(keys) := Uniactions("S $keys");
-SSK(keys) := Uniactions("SSK $keys");
+S(keys) := Usc("S $keys");
+SSK(keys) := Usc("SSK $keys");
 
 
 
@@ -135,8 +136,8 @@ SSK(keys) := Uniactions("SSK $keys");
 ## 
 
   # both of these commands do the same thing:
-W1(seconds) := Uniactions("W $seconds");
-WW(seconds) := Uniactions("W $seconds");
+W1(seconds) := Usc("W $seconds");
+WW(seconds) := Usc("W $seconds");
 
 
 ## 
@@ -144,13 +145,13 @@ WW(seconds) := Uniactions("W $seconds");
 ## 
 
   # wait for 0.1 seconds:
-W()  := Uniactions("W");
+W()  := Usc("W");
 
   # wait for a short time (0.3 seconds):
-SW() := Uniactions("SW");
+SW() := Usc("SW");
 
   # wait for a longer time (1 second):
-LW() := Uniactions("LW");
+LW() := Usc("LW");
 
 
 ## 
@@ -161,7 +162,7 @@ LW() := Uniactions("LW");
 ## before cutting it.
 ##
 
-VW() := Uniactions("VW");
+VW() := Usc("VW");
 
 
 ## 
@@ -178,7 +179,7 @@ VW() := Uniactions("VW");
 ## 
 ## Currently, $text may not contain a ";".
 ## 
-WWT(text) := Uniactions("WWT $text");
+WWT(text) := Usc("WWT $text");
 
 
 ## 
@@ -196,10 +197,10 @@ WWT(text) := Uniactions("WWT $text");
 ##   OpenURL(url) := RW() {ctrl+o} WTC() $url {enter};
 ## 
 
-WTC()       := Uniactions("WTC"); 
+WTC()       := Usc("WTC"); 
 
   # same but timeout is $units * 0.05 seconds:
-WTC1(units) := Uniactions("WTC $units"); 
+WTC1(units) := Usc("WTC $units"); 
 
 
 
@@ -222,21 +223,21 @@ WTC1(units) := Uniactions("WTC $units");
 ## 
 
   # absolute positioning from top left for MP(-) action:
-PMP()   := Uniactions("PMP");
+PMP()   := Usc("PMP");
 
   # relative positioning from top right for RMP(-) action:
-PRMP()  := Uniactions("PRMP");
+PRMP()  := Usc("PRMP");
 
 
   # absolute positioning from all 4 corners for MP(-) action:
-PMP1()  := Uniactions("PMP 1");
+PMP1()  := Usc("PMP 1");
 
   # relative positioning from all 4 corners for RMP(-) action:
-PRMP1() := Uniactions("PRMP 1");
+PRMP1() := Usc("PRMP 1");
 
 
   # all of the above:
-PALLMP() := Uniactions("PALLMP");
+PALLMP() := Usc("PALLMP");
 
 
 ## 
@@ -276,9 +277,9 @@ PALLMP() := Uniactions("PALLMP");
 ## 
 
   # absolute positioning in pixels:
- MP(area,x,y,clicking) := Uniactions("MP $area,$x,$y,$clicking");
+ MP(area,x,y,clicking) := Usc("MP $area,$x,$y,$clicking");
   # relative positioning in fractional coordinates (-1 to 1):
-RMP(area,x,y,clicking) := Uniactions("RMP $area,$x,$y,$clicking");
+RMP(area,x,y,clicking) := Usc("RMP $area,$x,$y,$clicking");
 
 
 ## 
@@ -288,10 +289,10 @@ RMP(area,x,y,clicking) := Uniactions("RMP $area,$x,$y,$clicking");
 ## 
 
   # (equivalent to MP(2,0,0,left down))
-MDOWN()    := Uniactions("MDOWN");
+MDOWN()    := Usc("MDOWN");
 
   # release mouse buttons (undoes MDOWN(); equivalent to MP(2,0,0,release)):
-ENDMOUSE() := Uniactions("ENDMOUSE");
+ENDMOUSE() := Usc("ENDMOUSE");
 
 
 
@@ -300,11 +301,11 @@ ENDMOUSE() := Uniactions("ENDMOUSE");
 ## 
 
   # remember mouse position
-RM()          := Uniactions("RM");
+RM()          := Usc("RM");
 
   # return mouse to position it was in when RM() was called; also
   # releases any held mouse buttons *afterwords*:
-CANCELMOUSE() := Uniactions("CANCELMOUSE");
+CANCELMOUSE() := Usc("CANCELMOUSE");
 
 
 
@@ -331,14 +332,14 @@ CANCELMOUSE() := Uniactions("CANCELMOUSE");
 ## Python Macros window (see above link).
 ## 
 
-BRINGUP(app) := Uniactions("BRINGUP $app");
+BRINGUP(app) := Usc("BRINGUP $app");
 
 
 ## 
 ## Remember current window for use by the WTC() and RTW() actions.
 ## 
 
-RW()  := Uniactions("RW"); 
+RW()  := Usc("RW"); 
 
 
 ## 
@@ -346,7 +347,7 @@ RW()  := Uniactions("RW");
 ## if it is iconifed.
 ## 
 
-RTW() := Uniactions("RTW"); 
+RTW() := Usc("RTW"); 
 
 
 
@@ -376,19 +377,19 @@ RTW() := Uniactions("RTW");
 ## 
 
   # Kill window via {alt+f4}:
-KW()   := Uniactions("KW");
+KW()   := Usc("KW");
 
   # Kill window with an alternative key (e.g., {ctrl+f4} for a close
   # document command):
-KW1(key) := Uniactions("KW $key");
+KW1(key) := Usc("KW $key");
   # Kill window with an alternative key AND an alternative key IF a dialog window comes up
-KW2(key, alternativekey) := Uniactions("KW $key, $alternativekey");
+KW2(key, alternativekey) := Usc("KW $key, $alternativekey");
 
 ## 
 ## Do an action only if the window title matches (part of window title,
 ##                                                case insensitive)
 ## 
-IFWT(title, action) := Uniactions("IFWT $title, $action");
+IFWT(title, action) := Usc("IFWT $title, $action");
 
 
 ###########################################################################
@@ -401,17 +402,17 @@ IFWT(title, action) := Uniactions("IFWT $title, $action");
 ## Push current contents of the Windows clipboard on a stack, then
 ## empty clipboard:
 ## 
-CLIPSAVE()    := Uniactions("CLIPSAVE");
+CLIPSAVE()    := Usc("CLIPSAVE");
 
 ## 
 ## Pop saved clipboard contents stack and store popped value in the Windows
 ## clipboard.  It is an error if the stack is empty.
 ## 
-CLIPRESTORE() := Uniactions("CLIPRESTORE");
+CLIPRESTORE() := Usc("CLIPRESTORE");
 
 ## send text via the clipboard (needed for some keyboard layouts, possibly
 ## useful for long text), existing clipboard content (if text) is maintained
-SCLIP(text) := Uniactions("SCLIP $text");
+SCLIP(text) := Usc("SCLIP $text");
 
 # 
 ## Compound action to deal with selected text.
@@ -437,7 +438,7 @@ SCLIP(text) := Uniactions("SCLIP $text");
 ## 
 ## 
 UseClipboard(selector, actions) :=
-	Uniactions("CLIPSAVE; $selector; CLIPISNOTEMPTY; $actions; CLIPRESTORE");
+	Usc("CLIPSAVE; $selector; CLIPISNOTEMPTY; $actions; CLIPRESTORE");
 
 
 
@@ -456,8 +457,8 @@ UseClipboard(selector, actions) :=
 ## 
 
   # these commands do the same thing:
-    MSG(text) := Uniactions("MSG $text");
-MESSAGE(text) := Uniactions("MESSAGE $text");
+    MSG(text) := Usc("MSG $text");
+MESSAGE(text) := Usc("MESSAGE $text");
 
 
 ## 
@@ -470,7 +471,7 @@ MESSAGE(text) := Uniactions("MESSAGE $text");
 ## Currently, $text may not contain a ";". 
 ## 
 
-YESNO(text, ifyes)   := Uniactions("YESNO $text; $ifyes");
+YESNO(text, ifyes)   := Usc("YESNO $text; $ifyes");
 
 
 
@@ -485,7 +486,7 @@ YESNO(text, ifyes)   := Uniactions("YESNO $text; $ifyes");
 ##
 ## An Emacs window should have focus.
 ##
-EMACS(command) := Uniactions("EMACS $command");
+EMACS(command) := Usc("EMACS $command");
 
 
 ## 
@@ -497,7 +498,7 @@ EMACS(command) := Uniactions("EMACS $command");
 ## recognized, tries HeardWord("a b c").
 ## 
 
-HW(text) := Uniactions("HW $text");
+HW(text) := Usc("HW $text");
 
 ## AutoHotkey support:
-AHK(script) := Uniactions("AHK $script");
+AHK(script) := Usc("AHK $script");

@@ -434,7 +434,7 @@ class ExcelActions(AllActions):
         prevRow = self.getPreviousRow()
         print(f'prevRow: {prevRow}')
         if prevRow:                
-            self.gotoRow(prevRow)
+            self.metaaction_gotoline(prevRow)
         return 1
         
 if __name__ == '__main__':

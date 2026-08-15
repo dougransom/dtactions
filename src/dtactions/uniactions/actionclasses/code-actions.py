@@ -6,9 +6,9 @@ getting the current line number!
 """
 import time
 import natlink
-from dtactions.actionclasses.actionbases import AllActions
-from dtactions.unimacroactions import doAction as action
 from dtactions.sendkeys import sendkeys as keystroke
+from dtactions.uniactions.actionclasses.actionbases import AllActions
+from dtactions.uniactions.uactions import doAction as action
 # from dtactions import natlinkclipboard
 
 class  CodeActions(AllActions):

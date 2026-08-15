@@ -5,7 +5,7 @@
 #pylint:disable=R0903
 import win32gui
 import dtactions.messagefunctions as mf
-from .actionbases import MessageActions
+from actionbases import MessageActions
 
 class Uedit32Actions(MessageActions):
     def __init__(self, progInfo):

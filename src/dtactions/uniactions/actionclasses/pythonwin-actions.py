@@ -2,7 +2,7 @@
 """
 #pylint:disable=R0903
 import dtactions.messagefunctions as mf
-from .actionbases import MessageActions
+from actionbases import MessageActions
 class PythonwinActions(MessageActions):
     handlesDict = {}
     def __init__(self, progInfo):

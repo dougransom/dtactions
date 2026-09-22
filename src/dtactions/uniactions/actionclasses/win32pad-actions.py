@@ -5,7 +5,7 @@ see http://www.gena01.com/win32pad/, the only select and say notepad like window
 #pylint:disable=R0903
 import pprint
 import dtactions.messagefunctions as mf
-from .actionbases import MessageActions
+from actionbases import MessageActions
 
 
 class Win32padActions(MessageActions):

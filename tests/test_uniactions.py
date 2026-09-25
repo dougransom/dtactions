@@ -10,13 +10,13 @@ import pytest
 # from dtactions import natlinkclipboard
 # from dtactions import unimacroinivars as inivars  # old style
 import dtactions
-from dtactions import unimacroutils as uu
+from dtactions.uniactions import uactions as ua
 def test_path_and_inifile_default(dtactions_setup_default):
     """test if the unimacroactions.ini file is copied into the dtactions user dir
     and check the validity of that ini file
     
     """
-    from dtactions import unimacroactions
+    # from dtactions import unimacroactions
     from dtactions import inivars
     
     dta_user_path = dtactions_setup_default
@@ -25,38 +25,14 @@ def test_path_and_inifile_default(dtactions_setup_default):
     actual_dta_user_path = dtactions.getDtactionsUserPath()
     assert actual_dta_user_path == dta_user_path
 
-    assert (dta_user_path/'unimacroactions.ini').is_file()
+    # the uniactions.ini file is used by Vocola and tested
+    # in test_natlinkconfig.py of natlinkcore..
+    # assert (dta_user_path/'uniactions.ini').is_file()
     
-    ua_file = dta_user_path/'unimacroactions.ini'
-    assert ua_file.is_file()
-    ini = inivars.IniVars(ua_file)
-    assert ini
-
-
-# 
-# def test_path_and_inifile_env_var(dtactions_setup_with_env_var):
-#     """test if the unimacroactions.ini file is copied into the dtactions user dir
-#     and check the validity of that ini file
-#     This one cannot co-exist with "test_path_and_inifile_default" above...
-#
-#     Not relevant for unimacroactions testing though.
-#     
-#     """
-#     from dtactions import unimacroactions
-#     from dtactions import inivars
-# 
-# 
-#     dta_user_path = dtactions_setup_with_env_var
-#     assert dta_user_path.is_dir()
-#     
-#     actual_dta_user_path = dtactions.getDtactionsUserPath()
-#     assert actual_dta_user_path == dta_user_path
-# 
-#     assert (dta_user_path/'unimacroactions.ini').is_file()
-#     
-#     ua_file = dta_user_path/'unimacroactions.ini'
-#     ini = inivars.IniVars(ua_file)
-#     assert ini
+    # ua_file = dta_user_path/'uniactions.ini'
+    # assert ua_file.is_file()
+    # ini = inivars.IniVars(ua_file)
+    # assert ini
 
 
 
@@ -66,7 +42,7 @@ def test_matchProgTitleWithDict(dtactions_setup_default):
     the Dict is taken from unimacroactions.ini
     section [general], key "child behaves like top" or "top behaves like child"
     """
-    from dtactions import unimacroactions as ua
+    # from dtactions import unimacroactions as ua
     from dtactions import inivars
     
     # the definition may contain part of the wanted title, but... only in matchPart is True...
@@ -90,7 +66,7 @@ def test_do_alert(tmp_path, nat_conn):
     """see if bringup works also with wrong input in unimacroactions.ini
     
     """
-    from dtactions import unimacroactions as ua
+    # from dtactions import unimacroactions as ua
     result = ua.do_ALERT()
     assert result == 1
     

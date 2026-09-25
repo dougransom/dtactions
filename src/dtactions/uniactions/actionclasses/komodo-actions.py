@@ -8,9 +8,10 @@ import time
 
 import natlink
 # from dtactions import messagefunctions as mf
-from dtactions.uniactions.actionclasses.actionbases import AllActions
-# from dtactions.unimacro.unimacroactions import doAction as action
 from dtactions.sendkeys import sendkeys as keystroke
+from dtactions.uniactions.actionclasses.actionbases import AllActions
+from dtactions.uniactions.uactions import doAction as action
+# from dtactions.unimacro.unimacroactions import doAction as action
 
 # class KomodoActions(MessageActions):
 class KomodoActions(AllActions):

@@ -5,7 +5,7 @@ now works with copy and so getting the wanted contents of text around the cursor
 """
 #pylint:disable=C0209
 import time
-from dtactions.actionclasses.actionbases import AllActions
+from dtactions.uniactions.actionclasses.actionbases import AllActions
 from dtactions import uniutils
 from dtactions.sendkeys import sendkeys
 
